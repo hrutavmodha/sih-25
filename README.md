@@ -67,8 +67,8 @@ Follow these instructions to get the project up and running on your local machin
 ### 2. Clone the Repository
 
 ```bash
-git clone <your-repository-url>
-cd SIH
+git clone https://github.com/hrutavmodha/sih-25.git
+cd sih-25
 ```
 
 ### 3. Set Up a Virtual Environment
