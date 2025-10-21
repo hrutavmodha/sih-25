@@ -1,7 +1,7 @@
 from fastapi import HTTPException, UploadFile, File, Form, Path
 from models.admin.faqs import FAQResponse, FAQUpdate
 from database import supabase
-from datetime import datetime
+from datetime import datetime, timezone
 from os import path
 import tempfile
 from . import router
@@ -48,8 +48,8 @@ async def add_faq(
             "source_file": source_file,
             "created_by": created_by,
             "status": "pending",
-            "created_at": datetime.utcnow().isoformat(),
-            "updated_at": datetime.utcnow().isoformat()
+            "created_at": datetime.now(timezone.utc).isoformat(),
+            "updated_at": datetime.now(timezone.utc).isoformat()
         }
 
         response = supabase.table("faqs").insert(data).execute()
@@ -59,6 +59,7 @@ async def add_faq(
         return response.data[0]
 
     except Exception as e:
+        print(str(e))
         raise HTTPException(status_code=500, detail=str(e))
 
 
@@ -88,8 +89,8 @@ async def update_faq(id: int = Path(...), faq: FAQUpdate = None):
     Update FAQ question, answer, or status.
     """
     try:
-        update_data = {k: v for k, v in faq.dict().items() if v is not None}
-        update_data["updated_at"] = datetime.utcnow().isoformat()
+        update_data = {k: v for k, v in faq.model_dump().items() if v is not None}
+        update_data["updated_at"] = datetime.now(timezone.utc).isoformat()
 
         response = supabase.table("faqs").update(update_data).eq("id", id).execute()
         if not response.data:

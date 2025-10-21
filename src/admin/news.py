@@ -1,7 +1,7 @@
 from fastapi import HTTPException, Path
 from models.admin.news import NewsBase, NewsResponse, NewsUpdate
 from database import supabase
-from datetime import datetime
+from datetime import datetime, timezone
 from . import router
 
 # ------------------------------
@@ -20,8 +20,8 @@ async def add_news(news: NewsBase):
             "title": news.title,
             "content": news.content,
             "created_by": news.created_by,
-            "created_at": datetime.now(datetime.timezone.utc).isoformat(),
-            "updated_at": datetime.now(datetime.timezone.utc).isoformat(),
+            "created_at": datetime.now(timezone.utc).isoformat(),
+            "updated_at": datetime.now(timezone.utc).isoformat(),
         }
 
         response = supabase.table("news").insert(data).execute()
@@ -49,6 +49,7 @@ async def list_all_news():
         )
         return response.data
     except Exception as e:
+        print(str(e))   
         raise HTTPException(status_code=500, detail=str(e))
 
 
@@ -62,8 +63,8 @@ async def update_news(
     Updates a specific news item.
     """
     try:
-        update_data = {k: v for k, v in news.dict().items() if v is not None}
-        update_data["updated_at"] = datetime.utcnow().isoformat()
+        update_data = {k: v for k, v in news.model_dump().items() if v is not None}
+        update_data["updated_at"] = datetime.now(timezone.utc).isoformat()
 
         response = supabase.table("news").update(update_data).eq("id", id).execute()
         if not response.data:

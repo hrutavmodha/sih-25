@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import HTTPException
 from models.student.news import NewsResponse
 from database import supabase
 from . import router 
@@ -27,4 +27,5 @@ async def get_student_news():
         return response.data
 
     except Exception as e:
+        print(str(e))
         raise HTTPException(status_code=500, detail=str(e))
