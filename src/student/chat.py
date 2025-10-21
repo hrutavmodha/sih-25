@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, Path
 from models.student.chat import ChatRequest, ChatResponse
 from database import supabase
-from datetime import datetime
+from datetime import datetime, timezone
 from . import router 
 
 # ------------------------------
@@ -44,7 +44,7 @@ async def send_chat_query(chat: ChatRequest):
             unsolved_data = {
                 "student_id": chat.student_id,
                 "query_text": chat.query_text,
-                "created_at": datetime.utcnow().isoformat(),
+                "created_at": datetime.now(timezone.utc).isoformat(),
                 "reviewed": False,
             }
             supabase.table("unsolved_queries").insert(unsolved_data).execute()

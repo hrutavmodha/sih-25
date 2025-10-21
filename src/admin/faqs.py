@@ -53,6 +53,7 @@ async def add_faq(
         }
 
         response = supabase.table("faqs").insert(data).execute()
+        print(response)
         if not response.data:
             raise HTTPException(status_code=400, detail="Failed to insert FAQ")
 
