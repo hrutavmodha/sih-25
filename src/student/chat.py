@@ -57,7 +57,7 @@ async def send_chat_query(chat: ChatRequest):
             "bot_response": bot_response,
             "faq_id": matched_faq_id,
             "status": status,
-            "created_at": datetime.utcnow().isoformat(),
+            "created_at": datetime.now(timezone.utc).isoformat(),
         }
         supabase.table("chat_logs").insert(chat_log).execute()
 

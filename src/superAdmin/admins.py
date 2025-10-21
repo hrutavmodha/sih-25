@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, Path, Depends, Header
+from fastapi import HTTPException, Path, Depends, Header
 from models.superAdmin.admins import AdminBase, AdminResponse, AdminUpdate
 from database import supabase
 from os import getenv

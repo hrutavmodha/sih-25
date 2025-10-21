@@ -1,10 +1,10 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import HTTPException
 from models.student.auth import TokenResponse, StudentLogin
 from database import supabase
 from hashlib import sha256
 from os import getenv
 import jwt
-from datetime import datetime, timedelta
+from datetime import datetime, timezone, timedelta
 from . import router 
 
 # ------------------------------
@@ -19,7 +19,7 @@ JWT_ALGORITHM = "HS256"
 def create_jwt_token(data: dict):
     """Generate JWT token with 1-hour expiration"""
     payload = data.copy()
-    payload["exp"] = datetime.now(datetime.timezone.utc) + timedelta(hours=1)
+    payload["exp"] = datetime.now(timezone.utc) + timedelta(hours=1)
     token = jwt.encode(payload, JWT_SECRET, algorithm=JWT_ALGORITHM)
     return token
 
